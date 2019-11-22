@@ -8,7 +8,7 @@ Created own chunking method to optimize the sending and recieving process and pr
 ```
 AwesomeFileSender 
 ```
-| function             |      type    |   decriptions |
+| function             |      type    |   descriptions |
 | :--------:           |     :-:      | :-:         |  
 | AwesomeFileSender    | constructor  | recieves ipaddress(IPAddress) ,port(int) of the system you want to connect  |
 | AwesomeFileSender    | constructor  | recieves ipaddress(string) ,port(int) of the system you want to connect     |
@@ -20,7 +20,7 @@ AwesomeFileSender
 ```
 AwesomeFileReciever
 ```
-| function               |      type    | params  decriptions |
+| function               |      type    | params  descriptions |
 | :--------:             |     :-:      | :-:         |  
 | AwesomeFileReciever    | constructor  | recieves ipaddress(IPAddress) ,port(int) of the system you want to connect  |
 | RecieveFile             |      bool    | recieve a file from a remote sender , optional directory path of file to be stored (string).  |
