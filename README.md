@@ -1,4 +1,4 @@
-# Awesome-File-Transfer-Alpha-
+# Awesome-File-Transfer
 TCP File Transfer libary using c# the libary.
 Created own chunking method to optimize the sending and recieving process and progress reporting system.
 
