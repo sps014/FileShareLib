@@ -9,7 +9,7 @@ public class FileSender
     public IPAddress IpAddress { get; }
     public int Port { get; }
 
-    private HttpClient? _httpClient;
+    private TcpClient _client=new TcpClient();
 
     private const long BufferSize=20480;
 
@@ -27,17 +27,20 @@ public class FileSender
     }
     private void InitClient()
     {
-        _httpClient=HttpClientFactory.Create();
+        _client.NoDelay = true;
     }
 
     public async ValueTask SendAsync(string file,uint start=0,uint length=0)
     {
-        if(!File.Exists(file))
+
+        if (!File.Exists(file))
             throw new FileNotFoundException(file);
 
         var actualLength=new FileInfo(file).Length;
         if (actualLength < start + length)
             throw new ArgumentException("Length can't be greater than actual file length");
+
+        _client.Connect(IpAddress.ToString(), Port);
 
         await SendBuffer(file, start, length,actualLength);
     }
@@ -57,6 +60,18 @@ public class FileSender
             read += stepRead;
 
             //Send The bytes
+            await SendToTarget(buffer, stepRead);
         }
+    }
+
+    private async ValueTask SendToTarget(byte[] buffer,int length)
+    {
+        await _client.GetStream().WriteAsync(buffer, 0, length);
+    }
+
+
+    ~FileSender()
+    {
+        _client.Dispose();
     }
 }
