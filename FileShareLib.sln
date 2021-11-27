@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{37592DA2-FDD5-403E-841A-E588A4793263}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileShare", "src\FileShare\FileShare.csproj", "{F1A9FFBD-883A-48C4-B319-96A21D266BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileShare", "src\FileShare.csproj", "{F1A9FFBD-883A-48C4-B319-96A21D266BBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
