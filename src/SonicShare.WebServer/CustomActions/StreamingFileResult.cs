@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SonicShare.WebServer.Models;
 
 namespace SonicShare.WebServer.CustomActions;
 
@@ -17,13 +18,13 @@ public class StreamingFileResult : IActionResult
     private readonly string _fileName;
     private readonly Action<long> _progressCallback;
 
-    public StreamingFileResult(string filePath, string contentType, long start, long length, string fileName, Action<long> progressCallback)
+    public StreamingFileResult(FileItem fileItem, long start, long length, Action<long> progressCallback)
     {
-        _filePath = filePath;
-        _contentType = contentType;
+        _filePath = fileItem.Path;
+        _contentType = fileItem.ContentType;
         _start = start;
         _length = length;
-        _fileName = fileName;
+        _fileName = fileItem.Name;
         _progressCallback = progressCallback;
     }
 

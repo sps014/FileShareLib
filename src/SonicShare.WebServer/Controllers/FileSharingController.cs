@@ -41,11 +41,9 @@ public class FileSharingController:Controller
         long length = end - start + 1;
 
         return new StreamingFileResult(
-            filePath: file.Path,
-            contentType: file.ContentType,
+            file,
             start: start,
             length: length,
-            fileName: file.Name,
             progressCallback: (sentBytes) =>
             {
                 // 🔥 Do something like log, update DB, signal client, etc.
