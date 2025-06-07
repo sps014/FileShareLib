@@ -1,5 +1,6 @@
-﻿@page "/sendSelectCatagory"
-
+﻿@page "/selectCatagory"
+@using SonicShare.WebServer
+@inject FileManager FileManager
 
 <ion-header>
     <ion-toolbar>
@@ -18,7 +19,7 @@
 
 <div style="padding:10px">
 
-    @foreach (var item in SendCategoryItems)
+    @foreach (var item in CategoryItems)
     {
         <ion-item @onclick="async()=>await OnCategorySelected(item)" lines="none" style="--background: #141a1f; min-height: 3.5rem;">
             <div slot="start" style="background-color: #2b3640; border-radius: 0.5rem; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center;">

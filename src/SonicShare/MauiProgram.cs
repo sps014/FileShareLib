@@ -26,6 +26,7 @@ namespace SonicShare
             builder.Services.AddSingleton<MessageDispatcher>();
             builder.Services.AddSingleton<CallbackLoggerProvider>();
             builder.Services.AddSingleton<WebAppHost>();
+            builder.Services.AddSingleton(FileManager.Current);
 
             return builder.Build();
         }

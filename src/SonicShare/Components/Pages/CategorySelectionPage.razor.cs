@@ -2,9 +2,9 @@ using SonicShare.Models;
 
 namespace SonicShare.Components.Pages;
 
-public partial class SendCategorySelectionPage
+public partial class CategorySelectionPage
 {
-    public static readonly List<SendCategoryItem> SendCategoryItems = new()
+    public static readonly List<SendCategoryItem> CategoryItems = new()
     {
         new SendCategoryItem("Contacts", "people-outline", SendCategory.Contacts),
         new SendCategoryItem("Images", "image-outline", SendCategory.Images),
@@ -23,6 +23,11 @@ public partial class SendCategorySelectionPage
         {
             default:
                 var files =await  FilePicker.PickMultipleAsync();
+
+                foreach (var file in files)
+                {
+                    FileManager.Add(new(file.FullPath,file.ContentType));
+                }
                 break;
 
         }

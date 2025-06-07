@@ -37,6 +37,7 @@ public class WebAppHostProgram
         builder.Logging.SetMinimumLevel(LogLevel.Information);
 
         builder.Services.AddSingleton(messageDispatcher);
+        builder.Services.AddSingleton(FileManager.Current);
 
         builder.Services.AddControllers().AddApplicationPart(assembly);
 

@@ -4,6 +4,6 @@ public partial class Home
 {
     void GoToCategorySelectionPage()
     {
-        NavManager.NavigateTo("/sendSelectCatagory");
+        NavManager.NavigateTo("/selectCatagory");
     }
 }
