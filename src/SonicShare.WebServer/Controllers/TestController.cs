@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SonicShare.WebServer.Controllers;
 
-
-public class TestController : Controller
+[ApiController]
+[Route("test")]
+public class TestController : ControllerBase
 {
-    [HttpGet("/mvc-test")]
+    [HttpGet("mvc-test")]
     public IActionResult Index()
     {
-        return Content("Hello MVC!");
+        return Ok("Hello All!");
     }
 }

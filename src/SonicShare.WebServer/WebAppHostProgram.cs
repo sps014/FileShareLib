@@ -27,6 +27,8 @@ public class WebAppHostProgram
             });
         });
 
+        var assembly = typeof(WebAppHostProgram).Assembly;
+
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -36,7 +38,7 @@ public class WebAppHostProgram
 
         builder.Services.AddSingleton(messageDispatcher);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddApplicationPart(assembly);
 
         var app = builder.Build();
 
