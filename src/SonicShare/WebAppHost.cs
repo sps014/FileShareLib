@@ -6,49 +6,56 @@ namespace SonicShare;
 
 public class WebAppHost : IAsyncDisposable
 {
-    private readonly ILogger<WebAppHost> _logger;
+    private readonly ILogger<WebAppHost> logger;
     private readonly MessageDispatcher dispatcher;
-    private readonly CallbackLoggerProvider _loggerProvider;
-    private WebApplication? _app;
+    private readonly CallbackLoggerProvider loggerProvider;
+    private WebApplication? app;
 
     public WebAppHost(ILogger<WebAppHost> logger, MessageDispatcher messageDispatcher, CallbackLoggerProvider loggerProvider)
     {
-        _logger = logger;
+        this.logger = logger;
         dispatcher = messageDispatcher;
-        _loggerProvider = loggerProvider;
+        this.loggerProvider = loggerProvider;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Starting web app.");
+        logger.LogInformation("Starting web app.");
 
         try
         {
 
-            _app = WebAppHostProgram.CreateWebApp(
+            app = WebAppHostProgram.CreateWebApp(
                 httpPort: 5000,
                 httpsPort: 5001,
                 "SonicShare",
                 dispatcher,
-                _loggerProvider);
+                loggerProvider);
 
-            await _app.StartAsync(cancellationToken);
+            await app.StartAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error from web app startup.");
+            logger.LogError(ex, "Error from web app startup.");
         }
     }
 
-
-    public async ValueTask DisposeAsync()
+    public  ValueTask StopAsync()
     {
-        _logger.LogInformation("Stopping web app.");
+        return CleanupAsync();
+    }
+    public ValueTask DisposeAsync()
+    {
+        return CleanupAsync();
+    }
 
-        if (_app != null)
-        {
-            await _app.StopAsync();
-            await _app.DisposeAsync();
-        }
+    public async ValueTask CleanupAsync()
+    {
+        if (app == null)
+            return;
+
+        logger.LogInformation("Stopping web app.");
+        await app.StopAsync();
+        await app.DisposeAsync();
     }
 }
