@@ -1,5 +1,5 @@
 ﻿@page "/"
-
+@inject NavigationManager NavManager
 
 <div class="banner">
 </div>
@@ -8,7 +8,7 @@
 <div style="display:flex;justify-content: space-evenly;align-items: center;">
 
     <div class="btn-group">
-        <ion-button size="large" shape="round">
+        <ion-button size="large" shape="round" @onclick="GoToCategorySelectionPage">
             <ion-icon slot="icon-only" name="send" style="color:white"></ion-icon>
         </ion-button>
         <p>Send</p>
@@ -66,3 +66,6 @@
         }
     }
 </style>
+
+
+    

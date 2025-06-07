@@ -1,0 +1,37 @@
+﻿@page "/sendSelectCatagory"
+
+
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <!-- Custom back button -->
+            <ion-button fill="clear" onclick="history.back()">
+                <ion-icon slot="icon-only" name="arrow-back-outline" style="color:white"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+
+        <ion-title style="text-align: center; font-size: 1.125rem; font-weight: bold; color: white;">
+            Send
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<div style="padding:10px">
+
+    @foreach (var item in SendCategoryItems)
+    {
+        <ion-item @onclick="async()=>await OnCategorySelected(item)" lines="none" style="--background: #141a1f; min-height: 3.5rem;">
+            <div slot="start" style="background-color: #2b3640; border-radius: 0.5rem; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center;">
+                <ion-icon name="@item.Icon" style="color: white; font-size: 24px;"></ion-icon>
+            </div>
+            <ion-label style="color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@item.Title</ion-label>
+        </ion-item>
+    }
+
+
+    <!-- Bottom Spacer -->
+    <div style="height: 1.25rem; background: #141a1f;"></div>
+</div>
+
+
+        
