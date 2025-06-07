@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SonicShare.WebServer.CustomActions;
 using SonicShare.WebServer.Dtos;
 using SonicShare.WebServer.Models;
 
@@ -24,12 +25,11 @@ public class FileSharingController:Controller
     [HttpPost("download")]
     public IActionResult DownloadFile([FromBody] DownloadRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.FilePath))
-            return BadRequest("File path is required.");
+        // ... validate request, get file info ...
 
         var file = FileManager.Current.FirstOrDefault(request.FilePath);
         if (file == null || !System.IO.File.Exists(file.Path))
-            return NotFound("File not found.");
+            return NotFound();
 
         long totalLength = file.Length;
         long start = request.RangeStart ?? 0;
@@ -40,20 +40,17 @@ public class FileSharingController:Controller
 
         long length = end - start + 1;
 
-        var fileStream = new FileStream(file.Path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 1 << 20, useAsync: true);
-        fileStream.Seek(start, SeekOrigin.Begin);
-
-        Response.StatusCode = (start == 0 && end == totalLength - 1)
-            ? StatusCodes.Status200OK
-            : StatusCodes.Status206PartialContent;
-
-        if (Response.StatusCode == StatusCodes.Status206PartialContent)
-            Response.Headers["Content-Range"] = $"bytes {start}-{end}/{totalLength}";
-
-        Response.Headers["Accept-Ranges"] = "bytes";
-        Response.Headers["Content-Length"] = length.ToString();
-        Response.Headers["Content-Disposition"] = $"attachment; filename=\"{file.Name}\"";
-
-        return new FileStreamResult(fileStream, file.ContentType);
+        return new StreamingFileResult(
+            filePath: file.Path,
+            contentType: file.ContentType,
+            start: start,
+            length: length,
+            fileName: file.Name,
+            progressCallback: (sentBytes) =>
+            {
+                // 🔥 Do something like log, update DB, signal client, etc.
+                Console.WriteLine($"Progress: {sentBytes}/{length} bytes sent");
+            }
+        );
     }
 }
