@@ -1,31 +1,11 @@
-# Awesome-File-Transfer
-TCP File Transfer libary using c# the libary.
-Created own chunking method to optimize the sending and recieving process and progress reporting system.
+## Setup
 
-## Usage
-#### constructor , public functions ,events
+1. Make sure the paths in csprojs for Asp.NET dlls are correct and corresponds to your computer.
 
+
+```xml
+<Reference Include="C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.12\*.dll" Exclude="C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.12\aspnetcorev2_inprocess.dll">
+	<Private>False</Private>
+	<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+</Reference>
 ```
-AwesomeFileSender 
-```
-| function             |      type    |   descriptions |
-| :--------:           |     :-:      | :-:         |  
-| AwesomeFileSender    | constructor  | recieves ipaddress(IPAddress) ,port(int) of the system you want to connect  |
-| AwesomeFileSender    | constructor  | recieves ipaddress(string) ,port(int) of the system you want to connect     |
-| sendFile             |      bool    | sends file to remote reciever , needs path of file to be sent (string).     |
-| SendCompleted        |   void event | triggered when operation is successfully completed                          |
-
-
-
-```
-AwesomeFileReciever
-```
-| function               |      type    | params  descriptions |
-| :--------:             |     :-:      | :-:         |  
-| AwesomeFileReciever    | constructor  | recieves ipaddress(IPAddress) ,port(int) of the system you want to connect  |
-| RecieveFile             |      bool    | recieve a file from a remote sender , optional directory path of file to be stored (string).  |
-| RecieveStarted        |   void event | triggered when operation is successfully started                          |
-|ProgressChange        | void event| triggers when chunk of file is recieved  , use ProgressArgs for more obtainging speed info.|
-|RecievedFile          |void event |triggers when file is recieved successfully  |
-
-These classes present easy to use methods for complete transmission process.
