@@ -6,6 +6,8 @@
         {
             InitializeComponent();
 
+            UserAppTheme = AppTheme.Dark;
+
             MainPage = new MainPage();
 
             // Start web app server.

@@ -1,1 +1,32 @@
-﻿
+﻿@inject NavigationManager NavManager
+
+<ion-tabs>
+
+    @foreach(var tab in Tabs)
+    {
+        <ion-tab tab="@tab.Id">
+            <div id="@tab.Id-page">
+               @*  <ion-header>
+                    <ion-toolbar>
+                        <ion-title>@tab.Title</ion-title>
+                    </ion-toolbar>
+                </ion-header> *@
+                <ion-content style="height:calc(100vh - 60px);">
+                    @ChildContent
+                </ion-content>
+            </div>
+        </ion-tab>
+    }
+
+
+    <ion-tab-bar slot="bottom">
+
+        @foreach(var tab in Tabs)
+        {
+            <ion-tab-button tab="@tab.Id" @onclick="() => GoToPage(tab.Link)">
+                <ion-icon name="@tab.ImagePath"></ion-icon>
+                @tab.Title
+            </ion-tab-button>
+        }
+    </ion-tab-bar>
+</ion-tabs>

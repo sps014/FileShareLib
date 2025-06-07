@@ -1,0 +1,36 @@
+
+nav {
+    background: rgba(7,17,27,0.6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    backdrop-filter: blur(20px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+    nav ul {
+        background-color: transparent;
+        list-style-type: none;
+        display: flex;
+        padding: 0;
+        margin: 0;
+        height: 60px;
+    }
+
+        nav ul li {
+            color: #777;
+            cursor: pointer;
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+        }
+
+            nav ul li p {
+                font-size: 12px;
+                margin: 2px 0;
+            }
+
+            nav ul li:hover,
+            nav ul li.active {
+                color: #8e44ad;
+            }
