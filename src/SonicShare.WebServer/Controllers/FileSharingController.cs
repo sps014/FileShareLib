@@ -25,29 +25,48 @@ public class FileSharingController:Controller
         }
     }
 
-    [HttpPost("download")]
-    public IActionResult DownloadFile([FromBody] DownloadRequest request)
+    [HttpGet("download")]
+    public IActionResult DownloadFile([FromQuery] string hash)
     {
         // ... validate request, get file info ...
 
-        var file = FileManager.Current.GetValueOrDefault(request.Hash);
+        var file = FileManager.Current.GetValueOrDefault(hash);
         if (file == null || !System.IO.File.Exists(file.Path))
             return NotFound();
 
         long totalLength = file.Length;
-        long start = request.RangeStart ?? 0;
-        long end = request.RangeEnd ?? (totalLength - 1);
+        string? rangeHeader = Request.Headers["Range"];
+        long start = 0;
+        long end = totalLength - 1;
+        bool isPartial = false;
 
-        if (start < 0 || end >= totalLength || start > end)
-            return StatusCode(StatusCodes.Status416RequestedRangeNotSatisfiable);
+        if (!string.IsNullOrEmpty(rangeHeader) && rangeHeader.StartsWith("bytes="))
+        {
+            var range = rangeHeader["bytes=".Length..].Split('-');
+
+            if (long.TryParse(range[0], out var parsedStart))
+                start = parsedStart;
+
+            if (range.Length > 1 && long.TryParse(range[1], out var parsedEnd))
+                end = parsedEnd;
+
+            // Clamp and validate range
+            if (start >= totalLength || end >= totalLength || start > end)
+                return StatusCode(StatusCodes.Status416RequestedRangeNotSatisfiable);
+
+            isPartial = true;
+        }
 
         long length = end - start + 1;
 
+
+
         return new StreamingFileResult(
             file,
-            start: start,
-            length: length,
-            progressCallback: (sentBytes) =>
+            _start: start,
+            _length: length,
+            isPartial,
+            _progressCallback: (sentBytes) =>
             {
                 // 🔥 Do something like log, update DB, signal client, etc.
                 Console.WriteLine($"Progress: {sentBytes}/{length} bytes sent");

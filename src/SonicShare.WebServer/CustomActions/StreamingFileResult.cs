@@ -11,41 +11,47 @@ namespace SonicShare.WebServer.CustomActions;
 
 public class StreamingFileResult : IActionResult
 {
-    private readonly string _filePath;
-    private readonly string _contentType;
-    private readonly long _start;
-    private readonly long _length;
-    private readonly string _fileName;
-    private readonly Action<long> _progressCallback;
+    private readonly string filePath;
+    private readonly string contentType;
+    private readonly long start;
+    private readonly long length;
+    private readonly bool isPartial;
+    private readonly string fileName;
+    private readonly Action<long> progressCallback;
 
-    public StreamingFileResult(FileItem fileItem, long start, long length, Action<long> progressCallback)
+    public StreamingFileResult(FileItem fileItem, long _start, long _length,bool _isPartial, Action<long> _progressCallback)
     {
-        _filePath = fileItem.Path;
-        _contentType = fileItem.ContentType;
-        _start = start;
-        _length = length;
-        _fileName = fileItem.Name;
-        _progressCallback = progressCallback;
+        filePath = fileItem.Path;
+        contentType = fileItem.ContentType;
+        start = _start;
+        length = _length;
+        isPartial = _isPartial;
+        fileName = fileItem.Name;
+        progressCallback = _progressCallback;
     }
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
+
         var response = context.HttpContext.Response;
 
-        response.StatusCode = StatusCodes.Status206PartialContent;
-        response.ContentType = _contentType;
+        response.StatusCode = isPartial ? StatusCodes.Status206PartialContent : StatusCodes.Status200OK;
+
+        if (isPartial)
+            response.Headers["Content-Range"] = $"bytes {start}-{start + length - 1}/{new FileInfo(filePath).Length}";
+
+        response.ContentType = contentType;
         response.Headers["Accept-Ranges"] = "bytes";
-        response.Headers["Content-Disposition"] = $"attachment; filename=\"{_fileName}\"";
-        response.Headers["Content-Range"] = $"bytes {_start}-{_start + _length - 1}/{new FileInfo(_filePath).Length}";
-        response.ContentLength = _length;
+        response.Headers["Content-Disposition"] = $"attachment; filename=\"{fileName}\"";
+        response.ContentLength = length;
 
         const int bufferSize = 64 * 1024; // 64 KB
         byte[] buffer = new byte[bufferSize];
 
-        using var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        fs.Seek(_start, SeekOrigin.Begin);
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        fs.Seek(start, SeekOrigin.Begin);
 
-        long bytesRemaining = _length;
+        long bytesRemaining = length;
         long totalSent = 0;
 
         while (bytesRemaining > 0)
@@ -62,7 +68,7 @@ public class StreamingFileResult : IActionResult
             await response.Body.FlushAsync();
 
             // Callback to report progress
-            _progressCallback?.Invoke(totalSent);
+            progressCallback?.Invoke(totalSent);
         }
     }
 }
