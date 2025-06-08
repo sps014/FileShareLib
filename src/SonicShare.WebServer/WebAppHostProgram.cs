@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
 
 namespace SonicShare.WebServer;
 
@@ -33,6 +35,19 @@ public class WebAppHostProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhost", builder =>
+            {
+                builder
+                    .WithOrigins("http://localhost:3000", "http://localhost:5173") // Add your localhost ports here
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials(); // If you need cookies/auth
+            });
+        });
+
         builder.Logging.AddProvider(loggerProvider);
         builder.Logging.SetMinimumLevel(LogLevel.Information);
 
@@ -49,16 +64,28 @@ public class WebAppHostProgram
         {
             app.UseExceptionHandler("/Error");
         }
+
+        var embeddedProvider = new ManifestEmbeddedFileProvider(assembly, "wwwroot");
+
+        app.UseDefaultFiles(new DefaultFilesOptions
+        {
+            FileProvider = embeddedProvider
+        });
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = embeddedProvider
+        });
+
+        app.UseCors("AllowLocalhost");
+
+        app.UseDefaultFiles(); // Serves index.html by default
         app.UseStaticFiles();
 
         app.UseRouting();
-
         app.MapControllers();
 
-        app.MapGet("/", () =>
-        {
-            return "Hello from Android";
-        });
+        app.MapFallbackToFile("/SonicShare.WebServer/index.html"); // Handles client-side routes
 
         return app;
     }

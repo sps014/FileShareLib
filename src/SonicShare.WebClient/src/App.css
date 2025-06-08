@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
