@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SonicShare.WebServer.Models;
 
-namespace SonicShare.WebServer.CustomActions;
+namespace SonicShare.WebServer.CustomActionResult;
 
 public class StreamingFileResult : IActionResult
 {
