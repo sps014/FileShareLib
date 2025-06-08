@@ -27,6 +27,7 @@ public partial class CategorySelectionPage
                 foreach (var file in files)
                 {
                     FileManager.Add(new(file.FullPath,file.ContentType));
+                    var r  = FileManager.GetAll().First().Hash;
                 }
                 break;
 

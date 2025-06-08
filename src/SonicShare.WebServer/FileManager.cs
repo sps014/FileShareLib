@@ -1,11 +1,12 @@
-﻿using SonicShare.WebServer.Models;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using SonicShare.WebServer.Models;
 
 namespace SonicShare.WebServer;
 
 public class FileManager
 {
-    private List<FileItem> filesToShare = new();
-    private static object lockObject= new object();
+    private ConcurrentDictionary<string,FileItem> filesToShare = new();
 
     private static FileManager current = new FileManager();
 
@@ -21,45 +22,29 @@ public class FileManager
 
     public bool Add(FileItem fileItem)
     {
-        lock (lockObject)
-        {
-            if (filesToShare.Contains(fileItem))
-                return false;
+        if (filesToShare.ContainsKey(fileItem.Hash))
+            return false;
 
-            filesToShare.Add(fileItem);
-            return true;
-        }
+        return filesToShare.TryAdd(fileItem.Hash, fileItem);
     }
 
-    public FileItem? FirstOrDefault(string path)
+    public FileItem? GetValueOrDefault(string hash)
     {
-        lock (lockObject)
-        {
-            return filesToShare.FirstOrDefault(x => x.Path == path);
-        }
+        return filesToShare.GetValueOrDefault(hash);
     }
 
     public bool Remove(FileItem fileItem)
     {
-        lock (lockObject)
-        {
-            return filesToShare.Remove(fileItem);
-        }
+        return filesToShare.Remove(fileItem.Hash,out _);
     }
 
     public void Clear()
     {
-        lock (lockObject)
-        {
-            filesToShare.Clear();
-        }
+        filesToShare.Clear();
     }
 
     public IEnumerable<FileItem> GetAll()
     {
-        lock (lockObject)
-        {
-            return filesToShare;
-        }
+        return filesToShare.Values;
     }
 }

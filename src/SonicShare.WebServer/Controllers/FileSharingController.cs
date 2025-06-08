@@ -13,13 +13,16 @@ namespace SonicShare.WebServer.Controllers;
 
 
 [ApiController]
-[Route("shared")]
+[Route("api/shared")]
 public class FileSharingController:Controller
 {
     [HttpGet("getAll")]
-    public IEnumerable<FileItem> GetAll()
+    public IEnumerable<FileItemDto> GetAll()
     {
-        return FileManager.Current.GetAll();
+        foreach(var item in  FileManager.Current.GetAll().OrderBy(x=>Path.GetExtension(x.Path)))
+        {
+            yield return new FileItemDto(item.Hash, item.Name, item.ContentType);
+        }
     }
 
     [HttpPost("download")]
@@ -27,7 +30,7 @@ public class FileSharingController:Controller
     {
         // ... validate request, get file info ...
 
-        var file = FileManager.Current.FirstOrDefault(request.FilePath);
+        var file = FileManager.Current.GetValueOrDefault(request.Hash);
         if (file == null || !System.IO.File.Exists(file.Path))
             return NotFound();
 
