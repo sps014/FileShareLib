@@ -13,11 +13,14 @@ public class CallbackLoggerProvider : ILoggerProvider
 {
     private readonly object _lock = new();
     private readonly List<Action<LogRecord>> _actions = new();
+    public static List<string> Logs = new();
 
     private void OnLog(LogRecord logRecord)
     {
         lock (_lock)
         {
+
+            Logs.Add(logRecord.ToString());
             foreach (var action in _actions)
             {
                 action(logRecord);

@@ -1,0 +1,22 @@
+﻿@page "/logViewer"
+@using SonicShare.WebServer
+@inject CallbackLoggerProvider LoggerProvider
+
+
+<h3>LogViewer</h3>
+
+@foreach (var log in CallbackLoggerProvider.Logs)
+{
+    <p>@log</p>
+}
+
+
+@code
+{
+    List<string> Logs = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.JSInterop;
 using SonicShare.Models;
 
 namespace SonicShare.Components.Layout;
@@ -16,14 +14,10 @@ public partial class NavMenu
     {
         new TabPage("share","/","Home"),
         new TabPage("list","/search","History"),
-        new TabPage("disc","/like","Discover"),
+        new TabPage("disc","/logViewer","Logs"),
         new TabPage("person","/account","Me"),
     };
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
 
     private void GoToPage(string tabLink)
     {

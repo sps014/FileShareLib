@@ -136,7 +136,7 @@ function FileList() {
 
   return (
     <div style={containerStyle}>
-      <h2 style={{ color: "white", marginBottom: 20 }}>Files</h2>
+      <h2 style={{ color: "white", marginBottom: 20 }}>Files - SonicShare</h2>
       {files.map((file) => (
         <GlassCard key={file.hash} file={file}>
           {isPlayable(file) && (

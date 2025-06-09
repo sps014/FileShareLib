@@ -85,7 +85,10 @@ public class WebAppHostProgram
         app.UseRouting();
         app.MapControllers();
 
-        app.MapFallbackToFile("/SonicShare.WebServer/index.html"); // Handles client-side routes
+        app.MapFallbackToFile("index.html", new StaticFileOptions
+        {
+            FileProvider = embeddedProvider
+        });
 
         return app;
     }
