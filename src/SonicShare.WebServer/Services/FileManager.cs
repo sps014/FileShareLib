@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using SonicShare.WebServer.Models;
 
-namespace SonicShare.WebServer;
+namespace SonicShare.WebServer.Services;
 
 public class FileManager
 {
-    private ConcurrentDictionary<string,FileItem> filesToShare = new();
+    private ConcurrentDictionary<string, FileItem> filesToShare = new();
 
     private static FileManager current = new FileManager();
 
@@ -35,7 +35,7 @@ public class FileManager
 
     public bool Remove(FileItem fileItem)
     {
-        return filesToShare.Remove(fileItem.Hash,out _);
+        return filesToShare.Remove(fileItem.Hash, out _);
     }
 
     public void Clear()

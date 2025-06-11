@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SonicShare.WebServer;
+using SonicShare.WebServer.Services;
 
 namespace SonicShare
 {

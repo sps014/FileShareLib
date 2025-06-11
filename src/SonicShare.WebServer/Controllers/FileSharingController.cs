@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SonicShare.WebServer.CustomActionResult;
 using SonicShare.WebServer.Dtos;
+using SonicShare.WebServer.Models;
+using SonicShare.WebServer.Services;
 
 namespace SonicShare.WebServer.Controllers;
 
@@ -10,6 +12,20 @@ namespace SonicShare.WebServer.Controllers;
 [Route("api/shared")]
 public class FileSharingController:Controller
 {
+    public DeviceInfo DeviceInfo { get; }
+
+    public FileSharingController(DeviceInfo deviceInfo)
+    {
+        DeviceInfo = deviceInfo;
+    }
+
+    [HttpGet("deviceInfo")]
+    public IActionResult SayHello()
+    {
+        return Ok(DeviceInfo);
+    }
+
+
     [HttpGet("getAll")]
     public IEnumerable<FileItemDto> GetAll()
     {

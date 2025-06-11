@@ -9,12 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
+using SonicShare.WebServer.Models;
+using SonicShare.WebServer.Services;
 
 namespace SonicShare.WebServer;
 
 public class WebAppHostProgram
 {
-    public static WebApplication CreateWebApp(int httpPort, int httpsPort, string applicationName, MessageDispatcher messageDispatcher, CallbackLoggerProvider loggerProvider)
+    public static WebApplication CreateWebApp(int httpPort, int httpsPort, string applicationName, MessageDispatcher messageDispatcher, CallbackLoggerProvider loggerProvider,DeviceInfo deviceInfo)
     {
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
@@ -52,7 +54,9 @@ public class WebAppHostProgram
         builder.Logging.SetMinimumLevel(LogLevel.Information);
 
         builder.Services.AddSingleton(messageDispatcher);
+        builder.Services.AddSingleton(deviceInfo);
         builder.Services.AddSingleton(FileManager.Current);
+        builder.Services.AddSingleton(SessionManager.Current);
 
         builder.Services.AddControllers().AddApplicationPart(assembly);
 

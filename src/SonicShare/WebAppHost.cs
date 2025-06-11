@@ -30,7 +30,9 @@ public class WebAppHost : IAsyncDisposable
                 httpsPort: 5001,
                 "SonicShare",
                 dispatcher,
-                loggerProvider);
+                loggerProvider,
+                new(DeviceInfo.Current.Name, DeviceInfo.Current.Platform.ToString(), 
+                    DeviceInfo.Current.Model,DeviceInfo.Current.Manufacturer,DeviceInfo.Current.Idiom.ToString()));
 
             await app.StartAsync(cancellationToken);
         }
